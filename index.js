@@ -224,11 +224,11 @@ app.get("/login", function (req, res, next) {
   );
 });
 
-//find all patients by doctor ID
+//find all patients
 app.get("/patients", function (req, res, next) {
   var collection = db.collection("patients");
   collection
-    .find({ doctorID: req.query.doctorID })
+    .find({ })
     .toArray(function (err, patients) {
       if (patients) {
         res.json(200, patients);
@@ -297,6 +297,21 @@ app.get("/appointments", function (req, res, next) {
     .toArray(function (err, appointments) {
       if (appointments) {
         res.json(200, appointments);
+      } else {
+        res.send(404);
+      }
+    });
+});
+
+app.get("/patients/:id", function (req, res, next) {
+
+  var ObjectId = require('mongodb').ObjectId; 
+  var collection = db.collection("patients");
+
+  collection.find({_id: new ObjectId(req.params.id)}).toArray(function (err, patients) {
+      if (patients) {
+        console.log("FETCH OK for patient " + req.params.id);
+        res.json(200, patients);
       } else {
         res.send(404);
       }
